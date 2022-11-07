@@ -52,30 +52,54 @@ python edit_config.py --train_dir /home/workspace/data/train/ --eval_dir /home/w
 ```
 A new config file called ```pipeline_new.config``` will be created in the ```/home/workspace/ directory```. Move this file to the ```/home/workspace/experiments/reference/``` directory
 
-### Training
-We run the script below to train. 
-We need to edit the path when training the improved model
-```
-python experiments/model_main_tf2.py --model_dir=experiments/reference/ --pipeline_config_path=experiments/reference/pipeline_new.config
-```
-To monitor the training, you can launch a tensorboard instance by running ```python -m tensorboard.main --logdir experiments/reference/```
-
-### Evaluation
-We run the script below to evaluate the model. 
-We need to edit the path when evaluating the improved model
-```
-python experiments/model_main_tf2.py --model_dir=experiments/reference/ --pipeline_config_path=experiments/reference/pipeline_new.config --checkpoint_dir=experiments/reference/
-```
-
 ## Dataset
 #### Dataset analysis
-This section should contain a quantitative and qualitative description of the dataset. It should include images, charts and other visualizations.
-#### Cross validation
-This section should detail the cross validation strategy and justify your approach.
+This section should contain a quantitative and qualitative description of the dataset. 
+
+##### Images from the dataset
+| ![](images/expl_image_1.PNG)  |  ![](images/expl_image_2.PNG) |
+| ![](images/expl_image_3.PNG)  |  ![](images/expl_image_4.PNG) |
+| ![](images/expl_image_5.PNG)  |  ![](images/expl_image_6.PNG) |
+| ![](images/expl_image_7.PNG)  |  ![](images/expl_image_8.PNG) |
+
+##### Analysis
+The dataset has a skewed distribution with a high number of cars, less pedestrians and very few cyclists thus there is a class imbalance problem
+<img src="images/dist_classes.PNG" width=50% height=50%>
+
+##### Below is the distribution of the classes in the images
+Distribution of cars
+
+<img src="images/dist_cars.PNG" width=50% height=50%>
+
+Distribution of Pedestrians
+
+<img src="images/dist_ped.PNG" width=50% height=50%>
+
+Distribution of Pedestrians
+
+<img src="images/dist_cyclist.PNG" width=50% height=50%>
 
 ## Training
-#### Reference experiment
-This section should detail the results of the reference experiment. It should includes training metrics and a detailed explanation of the algorithm's performances.
+
+The hyperparameters for training the model are defined in the pipeline_new.config
+### Training process
+We run the script below to train. 
+```
+python experiments/model_main_tf2.py --model_dir=experiments/experiment0/ --pipeline_config_path=experiments/experiment0/pipeline_new.config
+```
+To monitor the training, you can launch a tensorboard instance by running ```python -m tensorboard.main --logdir experiments/experiment0/```
+
+### Evaluation process
+We run the script below to evaluate the model. 
+```
+python experiments/model_main_tf2.py --model_dir=experiments/experiment0/ --pipeline_config_path=experiments/experiment0/pipeline_new.config --checkpoint_dir=experiments/experiment0/
+```
+### validation loss 
+Images from the losss after training the 
+
+### Precision and recall loss 
+Images from the losss after training the
 
 ### Improve on the reference
-This section should highlight the different strategies you adopted to improve your model. It should contain relevant figures and details of your findings.
+To improve the Model we used various augementations such as:
+
