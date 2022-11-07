@@ -57,10 +57,11 @@ A new config file called ```pipeline_new.config``` will be created in the ```/ho
 This section should contain a quantitative and qualitative description of the dataset. 
 
 ##### Images from the dataset
-| ![](images/expl_image_1.PNG)  |  ![](images/expl_image_2.PNG) |
-| ![](images/expl_image_3.PNG)  |  ![](images/expl_image_4.PNG) |
-| ![](images/expl_image_5.PNG)  |  ![](images/expl_image_6.PNG) |
-| ![](images/expl_image_7.PNG)  |  ![](images/expl_image_8.PNG) |
+<img src="images/expl_image_1.PNG">
+<img src="images/expl_image_2.PNG">
+<img src="images/expl_image_3.PNG">
+<img src="images/expl_image_4.PNG">
+<img src="images/expl_image_5.PNG">
 
 ##### Analysis
 The dataset has a skewed distribution with a high number of cars, less pedestrians and very few cyclists thus there is a class imbalance problem
@@ -69,15 +70,15 @@ The dataset has a skewed distribution with a high number of cars, less pedestria
 ##### Below is the distribution of the classes in the images
 Distribution of cars
 
-<img src="images/dist_cars.PNG" width=50% height=50%>
+<img src="images/dist_cars.PNG" >
 
 Distribution of Pedestrians
 
-<img src="images/dist_ped.PNG" width=50% height=50%>
+<img src="images/dist_ped.PNG" >
 
 Distribution of Pedestrians
 
-<img src="images/dist_cyclist.PNG" width=50% height=50%>
+<img src="images/dist_cyclist.PNG" >
 
 ## Training
 
@@ -95,11 +96,53 @@ We run the script below to evaluate the model.
 python experiments/model_main_tf2.py --model_dir=experiments/experiment0/ --pipeline_config_path=experiments/experiment0/pipeline_new.config --checkpoint_dir=experiments/experiment0/
 ```
 ### validation loss 
-Images from the losss after training the 
+With the initial model from The residual network. We error and the loss is high thus the model does not perform so well.
+
+<img src="images/initial_loss.PNG" >
 
 ### Precision and recall loss 
-Images from the losss after training the
 
-### Improve on the reference
-To improve the Model we used various augementations such as:
+<img src="images/initial_precision.PNG" >
+<img src="images/initial_recall.PNG" >
 
+## Improve on the reference
+To improve the Model we used various augmentations such as:
+
+- rgb_to_gray by probability: 0.2
+- brightness adjusted to max_delt 0.2
+- contrast adjusted to max_delt 0.2
+- hue adjusted to max_delt 0.2
+- saturation adjusted to max_delt 0.8 and max_delta: 1.25
+
+#### Images created after Augmentations
+
+<img src="images/aug_image_1.PNG">
+<img src="images/aug_image_2.PNG">
+<img src="images/aug_image_3.PNG">
+<img src="images/aug_image_4.PNG">
+<img src="images/aug_image_5.PNG">
+<img src="images/aug_image_6.PNG">
+
+
+### validation loss 
+After add the avarious augmentations to the model, the error and the loss is reduces thus improved performance of the model.
+
+<img src="images/final_loss.PNG" >
+
+### Precision and recall loss 
+
+<img src="images/final_precision.PNG" >
+<img src="images/final_recall.PNG" >
+
+## Creating an animation
+### Export the trained model
+Modify the arguments of the following function to adjust it to your models:
+
+```
+python experiments/exporter_main_v2.py --input_type image_tensor --pipeline_config_path experiments/experiment0/pipeline_new.config --trained_checkpoint_dir experiments/experiment0/ --output_directory experiments/experiment0/exported/ 
+```
+
+Create a video of your model's inferences for any tf record file. To do so, run the following command (modify it to your files):
+```
+python inference_video.py --labelmap_path label_map.pbtxt --model_path experiments/experiment0/exported/saved_model --tf_record_path data/test/segment-12200383401366682847_2552_140_2572_140_with_camera_labels.tfrecord --config_path experiments/experiment0/pipeline_new.config --output_path animation.gif
+```
