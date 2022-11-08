@@ -26,7 +26,8 @@ The Experiments folder is were files used for training, evaluation, and saved mo
     - exporter_main_v2.py - to create an inference model
     - model_main_tf2.py - to launch training
     - reference/ - reference training with the unchanged config file
-    - experiment0/ - contains the final config file
+    - experiment0/ - contains the pipeline config file with updated augmentation
+    - experiment0/ - contains the pipeline config file with updated augmentation
     - label_map.pbtxt
     ...
 ```
@@ -85,28 +86,34 @@ Distribution of Pedestrians
 The hyperparameters for training the model are defined in the pipeline_new.config
 ### Training process
 We run the script below to train. 
+Note: The path and model directory has to modified for each training `
+
 ```
-python experiments/model_main_tf2.py --model_dir=experiments/experiment0/ --pipeline_config_path=experiments/experiment0/pipeline_new.config
+python experiments/model_main_tf2.py --model_dir=experiments/reference/ --pipeline_config_path=experiments/reference/pipeline_new.config
 ```
-To monitor the training, you can launch a tensorboard instance by running ```python -m tensorboard.main --logdir experiments/experiment0/```
+To monitor the training, you can launch a tensorboard instance by running ``` python -m tensorboard.main --logdir experiments/reference/ ```
 
 ### Evaluation process
 We run the script below to evaluate the model. 
+Note: The path and model directory has to modified for each evaluation
+
 ```
-python experiments/model_main_tf2.py --model_dir=experiments/experiment0/ --pipeline_config_path=experiments/experiment0/pipeline_new.config --checkpoint_dir=experiments/experiment0/
+python experiments/model_main_tf2.py --model_dir=experiments/reference/ --pipeline_config_path=experiments/reference/pipeline_new.config --checkpoint_dir=experiments/reference/
 ```
 ### validation loss 
-With the initial model from The residual network. We error and the loss is high thus the model does not perform so well.
+With the initial model from The residual network. The error and the loss is high thus the model does not perform so well.
 
-<img src="images/initial_loss.PNG" >
+<img src="images/review_initial_loss.PNG" >
 
 ### Precision and recall loss 
+With the initial model from The residual network. The precision and recall are low  
 
-<img src="images/initial_precision.PNG" >
-<img src="images/initial_recall.PNG" >
+<img src="images/review_initial_precision.PNG" >
+<img src="images/review_initial_recall.PNG" >
 
 ## Improve on the reference
-To improve the Model we used various augmentations such as:
+To improve the Model we used various augmentations such as: 
+The augmentations can be found in the ``` /home/workspace/experiments/experiment1/pipeline_new.config ```
 
 - rgb_to_gray by probability: 0.2
 - brightness adjusted to max_delt 0.2
@@ -125,24 +132,25 @@ To improve the Model we used various augmentations such as:
 
 
 ### validation loss 
-After add the avarious augmentations to the model, the error and the loss is reduces thus improved performance of the model.
+After adding the avarious augmentations to the model, the error and the loss is reduces thus improved performance of the model.
 
-<img src="images/final_loss.PNG" >
+<img src="images/review_final_loss.PNG" >
 
 ### Precision and recall loss 
+After adding the avarious augmentations to the model, the Precision and recall increases
 
-<img src="images/final_precision.PNG" >
-<img src="images/final_recall.PNG" >
+<img src="images/review_final_precision.PNG" >
+<img src="images/review_final_recall.PNG" >
 
 ## Creating an animation
 ### Export the trained model
 Modify the arguments of the following function to adjust it to your models:
 
 ```
-python experiments/exporter_main_v2.py --input_type image_tensor --pipeline_config_path experiments/experiment0/pipeline_new.config --trained_checkpoint_dir experiments/experiment0/ --output_directory experiments/experiment0/exported/ 
+python experiments/exporter_main_v2.py --input_type image_tensor --pipeline_config_path experiments/reference/pipeline_new.config --trained_checkpoint_dir experiments/reference/ --output_directory experiments/reference/exported/ 
 ```
 
 Create a video of your model's inferences for any tf record file. To do so, run the following command (modify it to your files):
 ```
-python inference_video.py --labelmap_path label_map.pbtxt --model_path experiments/experiment0/exported/saved_model --tf_record_path data/test/segment-12200383401366682847_2552_140_2572_140_with_camera_labels.tfrecord --config_path experiments/experiment0/pipeline_new.config --output_path animation.gif
+python inference_video.py --labelmap_path label_map.pbtxt --model_path experiments/reference/exported/saved_model --tf_record_path data/test/segment-12200383401366682847_2552_140_2572_140_with_camera_labels.tfrecord --config_path experiments/reference/pipeline_new.config --output_path animation.gif
 ```
